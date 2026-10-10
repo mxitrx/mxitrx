@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <!-- ✏️ แก้ไข: ชื่อ Tab บนเบราว์เซอร์ -->
+    <title>Online Resume & Equipment Rental | AV Engineer</title>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #050505; /* สีดำสนิท */
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar (ดำ-เหลือง) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111111; }
+        ::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eab308; }
+
+        /* Grid Background & Glow Effect */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            z-index: -2;
+            transform: perspective(500px) rotateX(0deg);
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            /* แสงตามเมาส์สีเหลือง */
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.12) 0%, rgba(250, 204, 21, 0.02) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: top 0.1s ease, left 0.1s ease;
+        }
+
+        /* Reveal Animations */
+        .hidden-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .show-element {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism ขอบมน */
+        .glass {
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Typing Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: #facc15; /* สีเหลือง */
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 3D Tilt Settings */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+        .tilt-card-content {
+            transform: translateZ(30px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-500/30 selection:text-yellow-200">
+
+    <div class="bg-grid"></div>
+    <div id="cursor-glow"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-black/60 backdrop-blur-md" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- ✏️ แก้ไข: โลโก้หรือชื่อย่อของคุณตรงนี้ -->
+                <a href="#" class="text-xl font-bold tracking-widest text-white">
+                    AV<span class="text-yellow-400">PRO.</span>
+                </a>
+                <div class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#profile" class="text-gray-300 hover:text-yellow-400 transition-colors">ประวัติส่วนตัว</a>
+                    <a href="#experience" class="text-gray-300 hover:text-yellow-400 transition-colors">ประสบการณ์</a>
+                    <a href="#works" class="text-gray-300 hover:text-yellow-400 transition-colors">ผลงาน</a>
+                    <!-- เมนูใหม่ -->
+                    <a href="#rental" class="text-yellow-400 hover:text-yellow-300 transition-colors flex items-center gap-1">
+                        <i class="fas fa-box-open text-xs"></i> เช่าอุปกรณ์
+                    </a>
+                </div>
+                <!-- ✏️ แก้ไข: ใส่ลิงก์อีเมล หรือไลน์ของคุณที่ href -->
+                <a href="#contact" class="hidden md:block px-6 py-2 bg-yellow-400 hover:bg-yellow-500 text-black rounded-full text-sm font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                    ติดต่อจ้างงาน
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full z-10">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                
+                <div class="flex-1 hidden-element text-center md:text-left mt-10 md:mt-0">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400 text-xs font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                        HIRE & RENTAL SERVICES
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                        <!-- ✏️ แก้ไข: เปลี่ยนคำทักทายหรือใส่ชื่อของคุณตรงนี้ -->
+                        <span class="text-gray-400 text-2xl md:text-3xl font-medium block mb-2">สวัสดีครับ, ผมคือ</span>
+                        <span id="typing-text" class="text-yellow-400 typing-cursor"></span>
+                    </h1>
+                    <!-- ✏️ แก้ไข: คำแนะนำตัวเองสั้นๆ -->
+                    <p class="text-gray-400 text-lg mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed font-light">
+                        ผู้เชี่ยวชาญด้านระบบภาพ เสียง และสัญญาณวิดีโอ (AV & Live Stream) สำหรับงานอีเวนต์ พร้อมบริการ <strong class="text-yellow-400 font-medium">ให้เช่าอุปกรณ์สตรีมมิ่งครบวงจร</strong> และพัฒนาระบบหลังบ้านเพื่อซัพพอร์ตงาน
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <a href="#rental" class="px-8 py-3 bg-yellow-400 text-black rounded-full font-bold hover:bg-yellow-500 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(250,204,21,0.3)]">
+                            <i class="fas fa-boxes"></i> ดูอุปกรณ์เช่า
+                        </a>
+                        <a href="#profile" class="px-8 py-3 glass rounded-full font-bold text-white hover:border-yellow-400 hover:text-yellow-400 transition-colors flex items-center gap-2">
+                            <i class="far fa-file-alt"></i> ดูเรซูเม่
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Profile Hero Image -->
+                <div class="flex-1 hidden-element flex justify-center md:justify-end">
+                    <div class="relative w-72 h-72 md:w-96 md:h-96">
+                        <!-- กรอบหลังสีเหลืองมนๆ -->
+                        <div class="absolute inset-0 border-2 border-yellow-400/40 rounded-3xl rotate-6 transition-transform hover:rotate-12 duration-500"></div>
+                        <!-- ✏️ แก้ไข: นำ URL รูปของคุณมาใส่ -->
+                        <div class="absolute inset-0 bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl z-10 border border-white/10 group">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=800" alt="Profile" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile / Resume Section -->
+    <section id="profile" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-end gap-3 mb-12 hidden-element">
+                <div class="w-1.5 h-8 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                <h2 class="text-3xl font-bold leading-none text-white">ข้อมูลส่วนตัว <span class="text-gray-600 font-light text-xl ml-2">Personal Profile</span></h2>
+            </div>
+
+            <div class="glass rounded-[2rem] p-8 md:p-12 border border-white/5 shadow-2xl hidden-element hover:border-yellow-400/20 transition-colors duration-500">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">ข้อมูลติดต่อ</h3>
+                            <ul class="space-y-4 text-sm text-gray-400 font-light">
+                                <!-- ✏️ แก้ไข: ข้อมูลการติดต่อ -->
+                                <li class="flex items-center gap-3"><i class="fas fa-phone text-yellow-400 w-5"></i> 08X-XXX-XXXX</li>
+                                <li class="flex items-center gap-3"><i class="fas fa-envelope text-yellow-400 w-5"></i> your.email@example.com</li>
+                                <li class="flex items-center gap-3"><i class="fas fa-map-marker-alt text-yellow-400 w-5"></i> กรุงเทพมหานคร, ประเทศไทย</li>
+                                <li class="flex items-center gap-3"><i class="fab fa-line text-yellow-400 w-5 text-lg"></i> @yourlineid</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">การศึกษา</h3>
+                            <div class="mb-3">
+                                <p class="text-yellow-400 font-medium">ปริญญาตรี คณะเทคโนโลยีสารสนเทศ</p>
+                                <p class="text-sm text-gray-400 font-light">มหาวิทยาลัยเทคโนโลยีXXXXX</p>
+                                <p class="text-xs text-gray-600 mt-1">2016 - 2020</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 space-y-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-4">สรุปประวัติ (Professional Summary)</h3>
+                            <p class="text-gray-400 leading-relaxed text-sm md:text-base font-light">
+                                วิศวกรระบบภาพและเสียง (AV Engineer) และนักพัฒนาซอฟต์แวร์ที่มีประสบการณ์ในการดูแลงานอีเวนต์ระดับองค์กร 
+                                มีความเชี่ยวชาญในการเซ็ตอัประบบถ่ายทอดสด (Live Streaming) การทำ Routing สัญญาณภาพทางไกล
+                                ปัจจุบันเปิดให้บริการเช่าอุปกรณ์สตรีมมิ่งครบวงจร พร้อมรับพัฒนาระบบหลังบ้าน (Web App) เพื่อจัดการงานอีเวนต์
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-6">ทักษะความสามารถ (Hard Skills)</h3>
+                            <div class="mb-6">
+                                <p class="text-sm font-semibold text-white mb-3"><i class="fas fa-video mr-2 text-yellow-400"></i> Event Tech & Broadcasting</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">vMix PRO</span>
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">OBS Studio</span>
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">NGINX RTMP Server</span>
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">Cloudflare Tunnel</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white mb-3"><i class="fas fa-code mr-2 text-yellow-400"></i> Web Development</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">HTML / CSS</span>
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">Tailwind CSS</span>
+                                    <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm font-light hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all cursor-default">React (.jsx)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🌟 NEW: Equipment Rental Section -->
+    <section id="rental" class="py-24 relative z-10 bg-white/[0.02]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center mb-16 hidden-element">
+                <h2 class="text-3xl font-bold text-center text-white">บริการให้เช่าอุปกรณ์</h2>
+                <div class="w-12 h-1 bg-yellow-400 mt-4 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                <p class="text-gray-400 mt-4 text-sm font-light">Equipment Rental & Event Support</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Item 1 -->
+                <div class="hidden-element glass rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-400/50 transition-colors group">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-yellow-400/10 mix-blend-overlay group-hover:bg-transparent transition-all z-10"></div>
+                        <!-- ✏️ แก้ไข: เปลี่ยนรูปอุปกรณ์ -->
+                        <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&q=80&w=600" alt="PC Streaming" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">PC Streaming Set</h3>
+                        </div>
+                        <p class="text-gray-400 text-xs font-light mb-6 line-clamp-2">คอมพิวเตอร์สเปคสูงสำหรับงานสตรีมมิ่ง (vMix/OBS) พร้อม Capture Card 4 ช่องสัญญาณ</p>
+                        <a href="#contact" class="block text-center w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-colors">
+                            สอบถามราคา
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="hidden-element glass rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-400/50 transition-colors group" style="transition-delay: 100ms;">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-yellow-400/10 mix-blend-overlay group-hover:bg-transparent transition-all z-10"></div>
+                        <!-- ✏️ แก้ไข: เปลี่ยนรูปอุปกรณ์ -->
+                        <img src="https://images.unsplash.com/photo-1516280440502-869d07386d4e?auto=format&fit=crop&q=80&w=600" alt="Video Switcher" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">Video Switcher</h3>
+                        </div>
+                        <p class="text-gray-400 text-xs font-light mb-6 line-clamp-2">สวิตช์เชอร์สลับสัญญาณภาพ SDI/HDMI รองรับงานระดับมืออาชีพ ไร้รอยต่อ</p>
+                        <a href="#contact" class="block text-center w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-colors">
+                            สอบถามราคา
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="hidden-element glass rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-400/50 transition-colors group" style="transition-delay: 200ms;">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-yellow-400/10 mix-blend-overlay group-hover:bg-transparent transition-all z-10"></div>
+                        <!-- ✏️ แก้ไข: เปลี่ยนรูปอุปกรณ์ -->
+                        <img src="https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?auto=format&fit=crop&q=80&w=600" alt="Audio Mixer" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">Audio Mixer & Mic</h3>
+                        </div>
+                        <p class="text-gray-400 text-xs font-light mb-6 line-clamp-2">ชุดมิกเซอร์เสียงดิจิตอล พร้อมไมโครโฟนไร้สาย (Wireless Mic) คลื่นสัญญาณคมชัด</p>
+                        <a href="#contact" class="block text-center w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-colors">
+                            สอบถามราคา
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="hidden-element glass rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-400/50 transition-colors group" style="transition-delay: 300ms;">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-yellow-400/10 mix-blend-overlay group-hover:bg-transparent transition-all z-10"></div>
+                        <!-- ✏️ แก้ไข: เปลี่ยนรูปอุปกรณ์ -->
+                        <img src="https://images.unsplash.com/photo-1585435421671-0c16764628ce?auto=format&fit=crop&q=80&w=600" alt="Wireless Video" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">Wireless Video</h3>
+                        </div>
+                        <p class="text-gray-400 text-xs font-light mb-6 line-clamp-2">ชุดส่งสัญญาณภาพไร้สาย (Wireless Transmitter) ระยะไกล สำหรับกล้องเดินถือ (Roaming)</p>
+                        <a href="#contact" class="block text-center w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-colors">
+                            สอบถามราคา
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-12 text-center hidden-element">
+                <a href="#contact" class="inline-flex items-center gap-2 text-sm text-yellow-400 hover:text-yellow-300 font-medium underline underline-offset-4">
+                    ดูอุปกรณ์อื่นๆ เพิ่มเติม หรือขอใบเสนอราคาคลิกที่นี่ <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section (Timeline) -->
+    <section id="experience" class="py-24 relative z-10">
+        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            <div class="flex items-end gap-3 mb-12 hidden-element">
+                <div class="w-1.5 h-8 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                <h2 class="text-3xl font-bold leading-none">ประสบการณ์ทำงาน <span class="text-gray-600 font-light text-xl ml-2">Work Experience</span></h2>
+            </div>
+
+            <div class="relative border-l border-white/10 ml-4 md:ml-6">
+                
+                <div class="mb-12 pl-8 md:pl-12 relative hidden-element group">
+                    <!-- จุด Timeline สีเหลือง -->
+                    <div class="absolute w-4 h-4 bg-yellow-400 rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_rgba(250,204,21,0.6)] group-hover:scale-125 transition-transform"></div>
+                    <div class="glass p-8 rounded-2xl border border-white/5 group-hover:border-yellow-400/30 transition-colors">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-1">AV Engineer & Rental Service</h3>
+                                <p class="text-gray-400 font-medium text-sm">Freelance / Event Tech Solutions</p>
+                            </div>
+                            <span class="text-yellow-400 text-xs mt-3 md:mt-0 bg-yellow-400/10 border border-yellow-400/20 px-4 py-1.5 rounded-full w-max tracking-wide">2023 - PRESENT</span>
+                        </div>
+                        <ul class="list-disc list-inside text-gray-400 text-sm space-y-3 font-light leading-relaxed">
+                            <li>ให้บริการระบบ Live Streaming และให้เช่าอุปกรณ์สำหรับงานประชุมองค์กรใหญ่</li>
+                            <li>ควบคุมสวิตช์เชอร์ภาพด้วย <strong class="text-white">vMix</strong> และ <strong class="text-white">OBS Studio</strong></li>
+                            <li>ตั้งค่าและดูแลระบบ <strong class="text-white">NGINX RTMP Server</strong> ร่วมกับ Cloudflare Tunnel เพื่อจัดการ Video Routing ทางไกล</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mb-12 pl-8 md:pl-12 relative hidden-element group">
+                    <div class="absolute w-4 h-4 bg-gray-600 rounded-full -left-[8.5px] top-1.5 group-hover:bg-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] group-hover:scale-125 transition-all"></div>
+                    <div class="glass p-8 rounded-2xl border border-white/5 group-hover:border-yellow-400/30 transition-colors">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-1">Frontend Developer</h3>
+                                <p class="text-gray-400 font-medium text-sm">Creative Organizer Agency</p>
+                            </div>
+                            <span class="text-gray-400 text-xs mt-3 md:mt-0 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full w-max tracking-wide">2020 - 2023</span>
+                        </div>
+                        <ul class="list-disc list-inside text-gray-400 text-sm space-y-3 font-light leading-relaxed">
+                            <li>พัฒนาหน้าเว็บไซต์ลงทะเบียนออนไลน์ (Registration Pages) สำหรับงานอีเวนต์ด้วย <strong class="text-white">HTML, CSS, Tailwind</strong></li>
+                            <li>ออกแบบและสร้างระบบ Admin Interface (.jsx) ใช้งานง่ายพร้อม Animation ลื่นไหล</li>
+                            <li>ดูแลระบบ IT Support ภายในงานประชุมสัมมนา แก้ปัญหาคอมพิวเตอร์และระบบนำเสนอ</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Works / Portfolio Section -->
+    <section id="works" class="py-24 relative z-10 bg-white/[0.02]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center mb-16 hidden-element">
+                <h2 class="text-3xl font-bold text-center text-white">ผลงานที่โดดเด่น</h2>
+                <div class="w-12 h-1 bg-yellow-400 mt-4 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Work 1 -->
+                <div class="hidden-element tilt-card h-[420px]" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)">
+                    <div class="w-full h-full glass rounded-3xl overflow-hidden border border-white/5 shadow-2xl relative transition-transform duration-200 group hover:border-yellow-400/30">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-screen filter grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+                        
+                        <div class="p-8 absolute bottom-0 w-full tilt-card-content">
+                            <!-- ป้าย Tag เปลี่ยนเป็นสีเหลือง -->
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-yellow-400/20 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full border border-yellow-400/30 uppercase tracking-wider">Conference</span>
+                                <span class="bg-yellow-400/20 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full border border-yellow-400/30 uppercase tracking-wider">Live</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white group-hover:text-yellow-400 transition-colors">งานประชุมผู้ถือหุ้น (AGM)</h3>
+                            <p class="text-gray-400 text-sm font-light mb-2 line-clamp-3">ควบคุมระบบถ่ายทอดสด 4 กล้อง นำเสนอสไลด์ซ้อนภาพ (PiP) ผ่าน vMix และกระจายสัญญาณผ่าน NGINX RTMP</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 2 -->
+                <div class="hidden-element tilt-card h-[420px]" style="transition-delay: 100ms;" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)">
+                    <div class="w-full h-full glass rounded-3xl overflow-hidden border border-white/5 shadow-2xl relative transition-transform duration-200 group hover:border-yellow-400/30">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-screen filter grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+                        
+                        <div class="p-8 absolute bottom-0 w-full tilt-card-content">
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-yellow-400/20 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full border border-yellow-400/30 uppercase tracking-wider">Web Dev</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white group-hover:text-yellow-400 transition-colors">ระบบลงทะเบียนหน้างานอีเวนต์</h3>
+                            <p class="text-gray-400 text-sm font-light mb-2 line-clamp-3">ออกแบบหน้าตาเว็บแอปพลิเคชันด้วย Tailwind CSS ทำ Animation ลื่นไหล และสร้างระบบ Admin Dashboard (.jsx)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 3 -->
+                <div class="hidden-element tilt-card h-[420px]" style="transition-delay: 200ms;" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)">
+                    <div class="w-full h-full glass rounded-3xl overflow-hidden border border-white/5 shadow-2xl relative transition-transform duration-200 group hover:border-yellow-400/30">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-screen filter grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1590103504787-1784918e7e1f?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+                        
+                        <div class="p-8 absolute bottom-0 w-full tilt-card-content">
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-yellow-400/20 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full border border-yellow-400/30 uppercase tracking-wider">Routing</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white group-hover:text-yellow-400 transition-colors">Remote Video Routing</h3>
+                            <p class="text-gray-400 text-sm font-light mb-2 line-clamp-3">ออกแบบระบบรับส่งสัญญาณภาพระยะไกล ดึงภาพจาก OBS ต่างสาขามาเข้าที่เซ็นเตอร์ vMix ผ่านเครือข่ายอินเทอร์เน็ต</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="border-t border-white/10 bg-[#0a0a0a] py-16 text-center relative z-10">
+        <h3 class="text-2xl font-bold text-white mb-2">พร้อมร่วมงานกับทีมของคุณ</h3>
+        <p class="text-gray-400 mb-8 font-light text-sm">บริการด้านระบบภาพ เสียง และให้เช่าอุปกรณ์สตรีมมิ่งครบวงจร</p>
+        <div class="flex justify-center gap-4 mb-10">
+            <!-- ✏️ แก้ไข: ใส่ Email ของคุณตรง mailto: -->
+            <a href="mailto:your.email@example.com" class="px-8 py-3 bg-yellow-400 text-black hover:bg-yellow-500 rounded-full font-bold transition-colors flex items-center shadow-[0_0_20px_rgba(250,204,21,0.2)]">
+                <i class="fas fa-envelope mr-3"></i> ส่งอีเมลติดต่อ
+            </a>
+            <!-- ✏️ แก้ไข: ใส่ลิงก์ Line ของคุณ -->
+            <a href="#" class="px-8 py-3 bg-white/5 border border-white/10 text-white hover:border-yellow-400 hover:text-yellow-400 rounded-full font-bold transition-colors flex items-center">
+                <i class="fab fa-line mr-3 text-lg"></i> แอดไลน์
+            </a>
+        </div>
+        <p class="text-gray-600 text-sm font-light tracking-wide">© 2024 Your Name. AV Engineer & Equipment Rental.</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // 1. Mouse Tracking Glow Effect
+        const cursorGlow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+        });
+
+        // 2. 3D Tilt Effect on Portfolio Cards
+        function tiltEffect(event, element) {
+            const card = element.children[0];
+            const rect = element.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -8;
+            const rotateY = ((x - centerX) / centerX) * 8;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetTilt(element) {
+            const card = element.children[0];
+            card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        }
+
+        // 3. Typing Effect
+        const phrases = ["AV & Live Stream Engineer", "Equipment Rental Service", "Frontend Web Developer"];
+        let phraseIndex = 0;
+        let letterIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById("typing-text");
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentPhrase.substring(0, letterIndex - 1);
+                letterIndex--;
+            } else {
+                typingElement.textContent = currentPhrase.substring(0, letterIndex + 1);
+                letterIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 30 : 70;
+
+            if (!isDeleting && letterIndex === currentPhrase.length) {
+                typeSpeed = 2500;
+                isDeleting = true;
+            } else if (isDeleting && letterIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
+        }
+        setTimeout(type, 1000);
+
+        // 4. Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show-element');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+
+        document.querySelectorAll('.hidden-element').forEach((el) => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
